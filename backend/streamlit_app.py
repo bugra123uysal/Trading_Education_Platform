@@ -14,7 +14,7 @@ import streamlit as st
 from app.database import Base, engine, session_scope
 from app.data.seed_glossary import seed_glossary
 from app.data.seed_quiz import seed_quiz
-from ui import dashboard, backtest, quiz, glossary
+from ui import dashboard, quiz, glossary, replay
 
 st.set_page_config(
     page_title="Trading Eğitim Platformu",
@@ -40,7 +40,7 @@ st.sidebar.caption("Gerçek verilerle öğren, gerçek parayla riske girme.")
 
 PAGES = {
     "Grafikler": dashboard,
-    "Backtest": backtest,
+    "Grafik Oynatıcı": replay,
     "Quiz": quiz,
     "Terim Sözlüğü": glossary,
 }

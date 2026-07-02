@@ -94,6 +94,8 @@ def indicator_figure(
     display_start: str | None = None,
     display_end: str | None = None,
     markers: list[dict] | None = None,
+    vline_date: str | None = None,
+    vline_label: str | None = None,
 ) -> go.Figure:
     """
     Hisseyle ilgili tek grafik: üstte fiyat + 3 EMA (50/100/200), altta
@@ -104,6 +106,8 @@ def indicator_figure(
 
     full_bars: [{date, open, high, low, close, volume}, ...]
     markers: [{date, color}, ...] — backtest alış/satış noktaları için
+    vline_date: bu tarihte dikey kesikli çizgi çizilir (örn. senaryoda
+    "işleme girdiğin an" ile sonrasını ayırmak için)
     """
     df = with_indicators(full_bars)
     if display_start:
@@ -158,6 +162,23 @@ def indicator_figure(
         go.Scatter(x=df["date"], y=df["dollar_volume_ma50"], line=dict(color="orange", width=2), name="50 MA"),
         row=2, col=1,
     )
+
+    if vline_date:
+        # İki alt grafiğe de aynı dikey kesikli çizgiyi çiz — "işlem anı"
+        # ile sonrasını görsel olarak ayırır.
+        for row in (1, 2):
+            fig.add_vline(
+                x=vline_date, line_dash="dash", line_color="#d9a441", line_width=2,
+                row=row, col=1,
+            )
+        if vline_label:
+            fig.add_annotation(
+                x=vline_date, y=1.0, yref="paper",
+                text=vline_label, showarrow=False,
+                font=dict(color="#d9a441", size=12),
+                bgcolor="rgba(11,15,23,0.7)",
+                xanchor="left",
+            )
 
     fig.update_layout(
         template="plotly_dark",

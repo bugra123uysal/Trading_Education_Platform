@@ -190,13 +190,204 @@ QUESTIONS = [
         ),
         related_glossary_slug="portfoy",
     ),
+    # --- Yeni terimlerden üretilen sorular ---
+    dict(
+        topic="temel-kavramlar",
+        question_text="Açığa satış (short selling) yapan bir yatırımcı ne zaman kâr eder?",
+        options=[
+            "Hisse fiyatı yükselince",
+            "Hisse fiyatı düşünce",
+            "Şirket temettü dağıtınca",
+            "Hisse fiyatı hiç değişmeyince",
+        ],
+        correct_index=1,
+        explanation=(
+            "Açığa satışta önce ödünç alınan hisse satılır, fiyat düşünce daha ucuza geri "
+            "alınıp iade edilir — aradaki fark kârdır. Ancak fiyat yükselirse zarar teorik "
+            "olarak sınırsızdır, bu yüzden çok riskli bir işlemdir."
+        ),
+        related_glossary_slug="acik-satis",
+    ),
+    dict(
+        topic="temel-kavramlar",
+        question_text="'Ayı piyasası' ne anlama gelir?",
+        options=[
+            "Fiyatların uzun süreli yükseldiği dönem",
+            "Fiyatların uzun süreli düştüğü dönem",
+            "Borsanın tatil olduğu dönem",
+            "Sadece hayvancılık şirketlerinin işlem gördüğü piyasa",
+        ],
+        correct_index=1,
+        explanation=(
+            "Ayı pençesiyle yukarıdan aşağıya vurur — düşen piyasaya bu yüzden ayı piyasası "
+            "denir. Genel kabul, fiyatların zirveden %20'den fazla düşmesidir. Tersine, "
+            "uzun süreli yükselişe boğa piyasası denir."
+        ),
+        related_glossary_slug="boga-ayi-piyasasi",
+    ),
+    dict(
+        topic="temel-kavramlar",
+        question_text="Yüksek likiditeye sahip bir hisse ne demektir?",
+        options=[
+            "Fiyatı çok yüksek bir hisse",
+            "Fiyatı fazla etkilemeden kolayca alınıp satılabilen bir hisse",
+            "Sadece bankaların alabildiği bir hisse",
+            "Temettü ödemeyen bir hisse",
+        ],
+        correct_index=1,
+        explanation=(
+            "Likidite, bir varlığın nakde çevrilme kolaylığıdır. Çok işlem gören hisselerde "
+            "istediğin an alıcı/satıcı bulursun; az işlem görenlerde satmak istediğinde "
+            "fiyatı düşürmek zorunda kalabilirsin."
+        ),
+        related_glossary_slug="likidite",
+    ),
+    dict(
+        topic="temel-kavramlar",
+        question_text="Halka arz (IPO) nedir?",
+        options=[
+            "Şirketin iflasını açıklaması",
+            "Şirketin hisselerini ilk kez borsada halka satışa sunması",
+            "Şirketin başka bir şirketi satın alması",
+            "Devletin şirkete el koyması",
+        ],
+        correct_index=1,
+        explanation=(
+            "Halka arzda şirket, o güne kadar sadece kurucuların/ortakların elinde olan "
+            "hisselerini ilk kez borsada herkese satışa açar. Şirket böylece büyümek için "
+            "para toplar, hisse alanlar da şirkete ortak olur."
+        ),
+        related_glossary_slug="halka-arz",
+    ),
+    dict(
+        topic="temel-kavramlar",
+        question_text="Temettü (dividend) nedir?",
+        options=[
+            "Hisse alırken ödenen komisyon",
+            "Şirketin kârının bir kısmını hissedarlarına dağıtması",
+            "Borsaya giriş ücreti",
+            "Hisse fiyatındaki günlük değişim",
+        ],
+        correct_index=1,
+        explanation=(
+            "Şirket kâr edince bunun bir kısmını hisse sahiplerine nakit olarak dağıtabilir — "
+            "buna temettü denir. Her şirket temettü vermez; hızlı büyüyen şirketler genelde "
+            "kârı büyüme için şirkette tutar."
+        ),
+        related_glossary_slug="temettu",
+    ),
+    dict(
+        topic="risk-yonetimi",
+        question_text="10x kaldıraçla işlem yapan bir yatırımcı için fiyatın %10 aleyhine gitmesi ne anlama gelir?",
+        options=[
+            "%10 zarar eder",
+            "Hiçbir şey olmaz",
+            "Sermayesinin tamamını kaybedebilir",
+            "%10 kâr eder",
+        ],
+        correct_index=2,
+        explanation=(
+            "Kaldıraç kârı da zararı da katlar: 10x kaldıraçta fiyattaki %10'luk ters hareket, "
+            "%100 zarara — yani sermayenin tamamının silinmesine — denk gelir. Bu yüzden "
+            "kaldıraç, deneyimsiz yatırımcılar için en tehlikeli araçlardan biridir."
+        ),
+        related_glossary_slug="kaldirac",
+    ),
+    dict(
+        topic="risk-yonetimi",
+        question_text="Hedging (riskten korunma) ne yapar?",
+        options=[
+            "Kârı garantiler",
+            "Ana pozisyonun tersine çalışan bir pozisyonla olası zararı sınırlar",
+            "Vergiden muaf olmayı sağlar",
+            "Hisse fiyatını sabitler",
+        ],
+        correct_index=1,
+        explanation=(
+            "Hedging, 'hem güneş kremi hem şemsiye almak' gibidir: elindeki varlık zarar "
+            "ederse kazanan başka bir pozisyon açarsın. Kârı garantilemez ama büyük "
+            "kayıpları sınırlar — bunun bedeli de genelde bir miktar potansiyel kârdan vazgeçmektir."
+        ),
+        related_glossary_slug="hedging",
+    ),
+    dict(
+        topic="risk-yonetimi",
+        question_text="Spekülasyon ile uzun vadeli yatırım arasındaki temel fark nedir?",
+        options=[
+            "Spekülasyon kısa vadeli fiyat tahminine dayanır ve daha risklidir",
+            "Spekülasyon her zaman daha kârlıdır",
+            "Uzun vadeli yatırım yasa dışıdır",
+            "Aralarında hiçbir fark yoktur",
+        ],
+        correct_index=0,
+        explanation=(
+            "Yatırım, bir şirketin uzun vadeli büyümesine ortak olmaktır. Spekülasyon ise "
+            "kısa vadeli fiyat hareketini tahmin edip ondan kâr etmeye çalışmaktır — tahmin "
+            "tutmazsa kayıp da hızlı olur. İkisi de meşrudur ama risk profilleri çok farklıdır."
+        ),
+        related_glossary_slug="spekulasyon",
+    ),
+    dict(
+        topic="teknik-analiz",
+        question_text="Temel analiz ile teknik analiz arasındaki fark nedir?",
+        options=[
+            "Temel analiz şirketin finansal sağlığına, teknik analiz fiyat grafiğine bakar",
+            "İkisi de sadece grafiğe bakar",
+            "Teknik analiz sadece tahvillerde kullanılır",
+            "Temel analiz sadece kripto paralarda geçerlidir",
+        ],
+        correct_index=0,
+        explanation=(
+            "Temel analiz şirketin 'motoruna' bakar: kâr, borç, büyüme. Teknik analiz ise "
+            "fiyat ve hacim grafiklerindeki örüntülere bakar. Birçok yatırımcı ikisini "
+            "birlikte kullanır: temel analizle 'ne alacağını', teknik analizle 'ne zaman alacağını' belirler."
+        ),
+        related_glossary_slug="temel-analiz",
+    ),
+    dict(
+        topic="temel-kavramlar",
+        question_text="Limit emri ile piyasa emri arasındaki fark nedir?",
+        options=[
+            "Limit emri sadece belirlediğin fiyattan, piyasa emri anında mevcut fiyattan işlem yapar",
+            "İkisi de aynıdır",
+            "Piyasa emri sadece kapanışta çalışır",
+            "Limit emri sadece satış için kullanılır",
+        ],
+        correct_index=0,
+        explanation=(
+            "Piyasa emri 'hemen al/sat, fiyat neyse kabul' der — hız önceliklidir. Limit "
+            "emri 'sadece şu fiyattan al/sat' der — fiyat kontrolü önceliklidir ama emir "
+            "hiç gerçekleşmeyebilir. Volatil hisselerde limit emri sürpriz fiyatlardan korur."
+        ),
+        related_glossary_slug="piyasa-emri-limit-emri",
+    ),
+    dict(
+        topic="temel-kavramlar",
+        question_text="S&P 500 endeksi neyi ölçer?",
+        options=[
+            "ABD'nin en büyük 500 şirketinin ortak performansını",
+            "Sadece 500 dolarlık hisseleri",
+            "Avrupa borsalarının toplamını",
+            "Altın fiyatını",
+        ],
+        correct_index=0,
+        explanation=(
+            "Endeks, bir grup hissenin ortalamasını tek sayıyla gösterir — sınıf ortalaması "
+            "gibi. S&P 500, ABD'nin en büyük 500 şirketini kapsar ve 'piyasa bugün nasıl?' "
+            "sorusunun en yaygın cevabıdır."
+        ),
+        related_glossary_slug="endeks",
+    ),
 ]
 
 
 def seed_quiz(db: Session) -> None:
-    if db.query(QuizQuestion).count() > 0:
-        return
+    """Eksik soruları ekler — mevcut kayıtlara dokunmaz, yeni soruları tamamlar."""
+    existing = {text for (text,) in db.query(QuizQuestion.question_text).all()}
+    added = False
     for q in QUESTIONS:
+        if q["question_text"] in existing:
+            continue
         db.add(
             QuizQuestion(
                 topic=q["topic"],
@@ -207,4 +398,6 @@ def seed_quiz(db: Session) -> None:
                 related_glossary_slug=q.get("related_glossary_slug"),
             )
         )
-    db.commit()
+        added = True
+    if added:
+        db.commit()
