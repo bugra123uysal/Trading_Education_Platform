@@ -12,6 +12,7 @@ TOPICS = [
     ("temel-kavramlar", "Temel Kavramlar"),
     ("teknik-analiz", "Teknik Analiz"),
     ("risk-yonetimi", "Risk Yönetimi"),
+    ("grafik-okuma", "Grafik Okuma"),
 ]
 
 

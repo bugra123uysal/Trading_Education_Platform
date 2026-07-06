@@ -378,6 +378,260 @@ QUESTIONS = [
         ),
         related_glossary_slug="endeks",
     ),
+    # --- Grafik Okuma (Teknik Analiz Eğitimi dersleriyle eşleşen test) ---
+    dict(
+        topic="grafik-okuma",
+        question_text="Yükselen bir trendde piyasa yapısı nasıl görünür?",
+        options=[
+            "Lower High (LH) ve Lower Low (LL) dizisi",
+            "Higher High (HH) ve Higher Low (HL) dizisi",
+            "Sadece yatay hareket",
+            "Rastgele tepe ve dipler",
+        ],
+        correct_index=1,
+        explanation=(
+            "Yükselen trend, her tepenin bir öncekinden yüksek (HH) ve her dibin bir "
+            "öncekinden yüksek (HL) olduğu yapıdır. Bu dizi bozulduğunda — örneğin fiyat "
+            "bir öncekinden düşük dip (LL) yaptığında — trendin zayıfladığının ilk sinyalidir."
+        ),
+        related_glossary_slug="destek-direnc",
+    ),
+    dict(
+        topic="grafik-okuma",
+        question_text="Kırılan bir direnç seviyesi genellikle neye dönüşür?",
+        options=["Yeni bir dirence", "Desteğe", "Stop-loss seviyesine", "Hiçbir şeye — anlamını yitirir"],
+        correct_index=1,
+        explanation=(
+            "Teknik analizin klasik kuralı: kırılan direnç desteğe dönüşür (rol değişimi). "
+            "O seviyeden alamayanlar geri çekilmede alıcı olur, kıranlar da pozisyonlarını savunur — "
+            "bu yüzden fiyat kırdığı seviyeye geri test için döndüğünde genelde tepki alır."
+        ),
+        related_glossary_slug="destek-direnc",
+    ),
+    dict(
+        topic="grafik-okuma",
+        question_text="Düşüş trendinin dibinde uzun alt fitilli, küçük gövdeli bir mum (çekiç/hammer) ne anlatır?",
+        options=[
+            "Satıcıların tamamen kazandığını",
+            "Gün içinde satıcılar bastırdı ama alıcılar fiyatı geri yukarı taşıdı — potansiyel dip sinyali",
+            "Hacmin sıfır olduğunu",
+            "Piyasanın kapalı olduğunu",
+        ],
+        correct_index=1,
+        explanation=(
+            "Çekiç mumunda fiyat gün içinde sert düşer (uzun alt fitil) ama kapanışa doğru "
+            "toparlar. Bu, satış baskısının emildiğini gösterir. Tek başına yetmez — destek "
+            "bölgesinde ve yüksek hacimle oluşursa anlamı güçlenir."
+        ),
+        related_glossary_slug="mum-grafigi",
+    ),
+    dict(
+        topic="grafik-okuma",
+        question_text="Altın Kesişim (Golden Cross) nedir?",
+        options=[
+            "RSI'ın 50'yi kesmesi",
+            "50 günlük ortalamanın 200 günlük ortalamayı yukarı kesmesi",
+            "Fiyatın altın fiyatını geçmesi",
+            "İki mumun aynı renkte olması",
+        ],
+        correct_index=1,
+        explanation=(
+            "Altın Kesişim, 50 günlük ortalamanın 200 günlüğü yukarı kesmesidir ve uzun "
+            "vadeli yükselişin teyidi sayılır. Tersi (50'nin 200 altına inmesi) Ölüm "
+            "Kesişimidir. Gecikmeli sinyallerdir: trendi başlatmaz, doğrular."
+        ),
+        related_glossary_slug="hareketli-ortalama",
+    ),
+    dict(
+        topic="grafik-okuma",
+        question_text="Güçlü bir yükseliş trendinde RSI'ın uzun süre 70 üzerinde kalması ne anlama gelir?",
+        options=[
+            "Hemen satmak gerekir, düşüş kesindir",
+            "Güçlü trendlerde RSI aşırı bölgede uzun süre kalabilir — tek başına satış sinyali değildir",
+            "RSI bozulmuştur",
+            "Hisse işleme kapatılır",
+        ],
+        correct_index=1,
+        explanation=(
+            "Osilatörlerin en çok yanlış anlaşılan yönü budur: güçlü trendde RSI haftalarca "
+            "aşırı alımda kalabilir ve fiyat yükselmeye devam eder. 'RSI 70 = sat' kuralı "
+            "yatay piyasada işe yarar; trendli piyasada erken sattırır."
+        ),
+        related_glossary_slug="rsi",
+    ),
+    dict(
+        topic="grafik-okuma",
+        question_text="Bollinger Bantlarının aşırı daralması (squeeze) neyin habercisidir?",
+        options=[
+            "Fiyatın kesin yükseleceğinin",
+            "Fiyatın kesin düşeceğinin",
+            "Yakında büyük bir hareketin gelebileceğinin — ama yönünü söylemez",
+            "Temettü dağıtımının",
+        ],
+        correct_index=2,
+        explanation=(
+            "Bantlar volatiliteyle nefes alır: daralma, piyasanın sıkıştığını ve enerji "
+            "biriktirdiğini gösterir. Sıkışma sonrası genelde sert bir hareket gelir ama "
+            "yön bilgisi vermez — yönü kırılım ve hacim teyidi belirler."
+        ),
+        related_glossary_slug="volatilite",
+    ),
+    dict(
+        topic="grafik-okuma",
+        question_text="Direnç kırılımında (breakout) hacim neden önemlidir?",
+        options=[
+            "Önemli değildir",
+            "Düşük hacimli kırılımlar genelde yanlış çıkar (fakeout); gerçek kırılım ortalamanın üstünde hacim ister",
+            "Hacim sadece düşüşlerde önemlidir",
+            "Hacim yüksekse kırılım her zaman başarısız olur",
+        ],
+        correct_index=1,
+        explanation=(
+            "Kırılım, o seviyeyi savunanların yenildiği andır — gerçekse çok sayıda katılımcı "
+            "gerektirir, bu da hacimde görünür. Ortalamanın altında hacimle olan kırılımların "
+            "çoğu geri döner (fakeout). Hacim teyidi, kırılım işlemlerinin en kritik filtresidir."
+        ),
+        related_glossary_slug="hacim",
+    ),
+    dict(
+        topic="grafik-okuma",
+        question_text="Konsolidasyon sırasında hacmin kuruması (Volume Dry-Up, VDU) ne anlama gelir?",
+        options=[
+            "Hisse ölmüştür, uzak durulmalı",
+            "Satıcıların azaldığını gösterir — patlama öncesi sessizlik olabilir",
+            "Şirketin iflas ettiğini",
+            "Verinin hatalı olduğunu",
+        ],
+        correct_index=1,
+        explanation=(
+            "Sıkışma bölgesinde hacmin ortalamanın çok altına inmesi, satmak isteyen herkesin "
+            "sattığını, arzın kuruduğunu gösterir. Minervini/Qullamaggie tarzı momentum "
+            "stratejilerinde VDU, kırılım öncesi aranan işaretlerden biridir."
+        ),
+        related_glossary_slug="hacim",
+    ),
+    dict(
+        topic="grafik-okuma",
+        question_text="Fiyat %38.2 Fibonacci seviyesinde durup trend yönüne dönerse bu nasıl yorumlanır?",
+        options=[
+            "Trend zayıftır",
+            "Sığ düzeltme — trend güçlü demektir",
+            "Fibonacci çalışmamıştır",
+            "Piyasa manipüle edilmiştir",
+        ],
+        correct_index=1,
+        explanation=(
+            "Düzeltmenin derinliği trendin sağlığını gösterir: %23.6-38.2 gibi sığ "
+            "düzeltmelerden dönen fiyat, alıcıların sabırsız olduğunu ve trendin güçlü "
+            "olduğunu anlatır. %61.8'in kaybı ise hareketin sorgulanmasıdır."
+        ),
+        related_glossary_slug="destek-direnc",
+    ),
+    dict(
+        topic="grafik-okuma",
+        question_text="1:2 Risk/Ödül oranıyla işlem yapan bir trader, işlemlerinin sadece %40'ını kazansa ne olur?",
+        options=[
+            "Kesin zarar eder",
+            "Başa baş kalır",
+            "Uzun vadede kâr eder — beklentisi (expectancy) pozitiftir",
+            "Hesabı kapatılır",
+        ],
+        correct_index=2,
+        explanation=(
+            "Hesap: 100 işlemde 40 kazanç × 2R − 60 kayıp × 1R = 80R − 60R = +20R. "
+            "İsabet oranı %50'nin altında olsa bile kazançların kayıplardan büyük olması "
+            "sistemi kârlı yapar. Bu yüzden profesyoneller isabet oranından çok R:R'ye odaklanır."
+        ),
+        related_glossary_slug="stop-loss",
+    ),
+    dict(
+        topic="grafik-okuma",
+        question_text="ATR bazlı stop-loss, sabit yüzdeli stop'a göre neden daha mantıklıdır?",
+        options=[
+            "Daha az matematik gerektirir",
+            "Hissenin kendi volatilitesine uyum sağlar: oynak hissede geniş, sakin hissede dar durur",
+            "Her zaman daha yakın durur",
+            "Komisyonu düşürür",
+        ],
+        correct_index=1,
+        explanation=(
+            "Günde %5 oynayan bir hisseye %2'lik stop koyarsan normal gürültüyle stop olursun; "
+            "günde %0.5 oynayan hisseye %10'luk stop koyarsan gereksiz risk alırsın. ATR, "
+            "hissenin gerçek günlük hareketini ölçtüğü için stop mesafesini hisseye göre ayarlar."
+        ),
+        related_glossary_slug="volatilite",
+    ),
+    dict(
+        topic="grafik-okuma",
+        question_text="Bireysel hisse ne kadar güçlü görünürse görünsün, genel piyasa (SPY/QQQ) düşüş trendindeyse ne beklenir?",
+        options=[
+            "Hiçbir etkisi olmaz",
+            "Kırılımların (breakout) çoğu başarısız olur — piyasa geneli bireysel hisseyi bastırır",
+            "Hisse daha hızlı yükselir",
+            "Hacim otomatik artar",
+        ],
+        correct_index=1,
+        explanation=(
+            "Hisselerin büyük çoğunluğu genel piyasayla birlikte hareket eder. Ayı "
+            "piyasasında en güçlü görünen kırılımlar bile çoğunlukla satışla karşılanır. "
+            "Bu yüzden deneyimli trader'lar önce piyasanın yönüne (SPY/QQQ trendine) bakar, "
+            "sonra hisse seçer — O'Neil ve Minervini'nin sisteminin temelidir."
+        ),
+        related_glossary_slug="endeks",
+    ),
+    # --- Qullamaggie Swing Stratejisi ---
+    dict(
+        topic="grafik-okuma",
+        question_text="Qullamaggie'nin Breakout setup'ında giriş ne zaman yapılır?",
+        options=[
+            "Konsolidasyon içinde, kırılımı önceden tahmin ederek",
+            "Konsolidasyon tepesi yüksek hacimle kırıldıktan sonra (opening range high)",
+            "Fiyat 200 günlük ortalamanın altına inince",
+            "RSI 30'un altına düşünce",
+        ],
+        correct_index=1,
+        explanation=(
+            "Qullamaggie asla tahmin etmez: 'kırılacak gibi duruyor' diye içeride beklemez. "
+            "Kırılım gerçekleştikten sonra, açılış aralığının (ilk 1/5/60 dk mumun) tepesi "
+            "aşılınca girer. Stop günün dibindedir ve risk hesabın %0.25-1'ini geçmez."
+        ),
+        related_glossary_slug="destek-direnc",
+    ),
+    dict(
+        topic="grafik-okuma",
+        question_text="Episodic Pivot (EP) setup'ında hissenin son 3-6 ayda rally YAPMAMIŞ olması neden istenir?",
+        options=[
+            "Ucuz hisse daha çok kazandırdığı için",
+            "Haber sürpriz olmalı — zaten koşmuş hissede haber çoğunlukla fiyatlanmıştır",
+            "Komisyonlar düşük olduğu için",
+            "PDT kuralından kaçınmak için",
+        ],
+        correct_index=1,
+        explanation=(
+            "EP'nin gücü sürprizdedir: beklenmedik kazanç/haber, hisseyi yeni sahiplerine "
+            "aylarca taşıtacak taze bir hikâye başlatır. Aylardır yükselen hissede aynı haber "
+            "'beklenen haber' olur ve çoğu kez 'haberi sat' tepkisi gelir."
+        ),
+        related_glossary_slug="hacim",
+    ),
+    dict(
+        topic="grafik-okuma",
+        question_text="Qullamaggie kazanan pozisyonun kalan kısmını ne zamana kadar taşır?",
+        options=[
+            "%5 kâr edince hepsini satar",
+            "Fiyat 10 veya 20 günlük hareketli ortalamayı aşağı kırana kadar",
+            "Tam bir yıl",
+            "RSI 70 olana kadar",
+        ],
+        correct_index=1,
+        explanation=(
+            "Sistemin asimetrisi buradadır: ilk 3-5 günde pozisyonun 1/3-1/2'si satılır "
+            "(maliyet güvenceye alınır), kalanı 10/20 günlük ortalama trend bozulana kadar "
+            "taşınır. Boğa piyasasında bu, 10-20R'lik hareketleri yakalamayı sağlar — "
+            "küçük sabit risk, açık uçlu kazanç."
+        ),
+        related_glossary_slug="hareketli-ortalama",
+    ),
 ]
 
 
