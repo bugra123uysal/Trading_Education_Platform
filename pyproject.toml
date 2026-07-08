@@ -1,0 +1,13 @@
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# E501 (satır uzunluğu) line-length ile yönetiliyor; seed dosyalarındaki
+# uzun eğitim metinleri için kapalı tutuyoruz.
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = ["backend"]
+addopts = "-q"
