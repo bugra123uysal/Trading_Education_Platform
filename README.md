@@ -1,5 +1,8 @@
 # 🎓 Trading Education Platform
 
+[![CI](https://github.com/bugra123uysal/Trading_Education_Platform/actions/workflows/ci.yml/badge.svg)](https://github.com/bugra123uysal/Trading_Education_Platform/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Live demo: https://trade-egitim.streamlit.app/
 
 <img width="1140" height="487" alt="Ekran görüntüsü 2026-07-02 143513" src="https://github.com/user-attachments/assets/adcbf26b-21b2-4de6-9db4-4d541f344ea0" />
@@ -25,18 +28,34 @@ One Streamlit app, one process, one language. No separate API server, no JavaScr
 
 - **UI**: [Streamlit](https://streamlit.io) + [Plotly](https://plotly.com/python/) (candlestick charts)
 - **Data**: fetched via [yfinance](https://github.com/ranaroussi/yfinance), cached in SQLite with a 12-hour TTL
-- **Database**: SQLite (`backend/data.db`, auto-created) + SQLAlchemy ORM
+- **Database**: SQLite (`backend/data.db`, auto-created) + SQLAlchemy ORM (2.x)
+
+```mermaid
+flowchart LR
+    Y["yfinance<br/>(US market data)"] -->|retry + backoff| F["fetcher.py"]
+    F -->|write / read| DB[("SQLite cache<br/>12h TTL")]
+    DB --> F
+    F -->|candles| APP["app/ domain<br/>engine · analysis · quiz"]
+    APP --> UI["ui/ pages<br/>Streamlit + Plotly"]
+    UI -->|renders| USER(["User"])
+```
+
+> **Cache note:** On Streamlit Cloud the disk is ephemeral, so `data.db` is **not** persistent — it is reset on every restart/redeploy and re-populated on first lookup. A `@st.cache_data` layer over the SQLite cache keeps repeated in-process lookups fast.
 
 ## 📁 Project Structure
 
 ```
+.github/workflows/ci.yml     # CI: ruff + pytest on Python 3.11 & 3.12
+pyproject.toml               # ruff + pytest configuration
+LICENSE                      # MIT
 backend/
   streamlit_app.py           # Entry point — `streamlit run streamlit_app.py`
   app/
     database.py              # SQLite connection
     models.py                # ORM tables
     indicators.py            # EMA, dollar-volume columns
-    data/fetcher.py          # yfinance + caching logic
+    analysis.py              # Event detection (crosses, swings, gaps, patterns, Qullamaggie setups)
+    data/fetcher.py          # yfinance + caching logic (retry, resilience)
     data/seed_glossary.py    # Glossary seed data
     data/seed_quiz.py        # Quiz question seed data
     backtest/strategies.py   # MA crossover, RSI threshold strategies
@@ -45,21 +64,26 @@ backend/
     quiz/grading.py          # Answer grading + progress tracking
   ui/
     dashboard.py             # Charts page
-    backtest.py              # Backtest page
-    quiz.py                  # Quiz page (scenario + knowledge tests)
+    education.py             # Technical analysis lessons on real charts
+    replay.py                # TradingView-style bar replay
+    quiz.py                  # Quiz page (gamified scenario + knowledge tests)
     glossary.py              # Glossary page
-    common.py                # Shared helpers (chart rendering, term expanders)
+    common.py                # Shared helpers (chart rendering, cached candle loader)
+  tests/                     # Offline pytest suite (engine, strategies, grading)
   .streamlit/config.toml     # Dark theme settings
 ```
 
 ## 🛠️ Features
 
 1. **Charts** — Candlestick charts with real historical data (MU, NVDA, AAPL, TSLA, MSFT)
-2. **Backtesting** — Run an MA crossover or RSI threshold strategy over a chosen date range; get profit/loss, win rate, best/worst trade, and buy/sell markers plotted on the chart
-3. **Quizzes**
-   - *Scenario questions*: a random moment is picked from a real stock's history — "What would you do?" — then the actual outcome is revealed
-   - *Knowledge tests*: fundamentals, technical analysis, and risk management, with explanations shown for both correct and incorrect answers
-4. **Glossary** — Plain-language term explanations, searchable on its own page and embedded contextually (via `st.expander`) on the backtest and quiz pages
+2. **Technical Analysis Education** — 11 lessons, each explaining a concept then marking **real, dated examples** detected automatically on real charts: market structure (HH/HL), support/resistance, candle patterns, moving-average crosses, RSI, Bollinger/ATR, volume, gaps, Fibonacci, risk management, and the **Qullamaggie swing setups** (Breakout, Episodic Pivot, Parabolic)
+3. **Chart Replay** — TradingView-style bar replay: rewind a real chart to a past date and play it forward day by day to practice reading price action without seeing the future
+4. **Quizzes**
+   - *Gamified scenario*: start with a $100 balance and profit targets; a random moment from a real stock's history is shown — Buy / Short / Wait — then the outcome updates your balance, marks your entry point, and gives educational feedback
+   - *Knowledge tests*: fundamentals, technical analysis, risk management, and chart reading, with explanations shown for both correct and incorrect answers
+5. **Glossary** — Plain-language term explanations, searchable on its own page and embedded contextually (via `st.expander`) across the app
+
+The backtest engine (`app/backtest/`) remains the most heavily tested module and powers the offline test suite, even though the standalone backtest page was retired in favour of Chart Replay.
 
 ## 🚀 Setup & Run
 
@@ -75,13 +99,29 @@ pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-The app opens automatically in your browser (default: http://localhost:8501). On first launch it creates the SQLite tables, seeds the glossary and quiz questions (only if tables are empty), and caches yfinance data for 12 hours after the first lookup.
+Or, the minimal one-liner once dependencies are installed:
+
+```bash
+cd backend && pip install -r requirements.txt && streamlit run streamlit_app.py
+```
+
+The app opens automatically in your browser (default: http://localhost:8501). On first launch it creates the SQLite tables, seeds the glossary and quiz questions (only missing entries are added), and caches yfinance data for 12 hours after the first lookup.
+
+## 🧪 Tests
+
+```bash
+pip install pytest ruff
+pytest backend/tests -q      # offline test suite (engine, strategies, grading)
+ruff check backend           # lint
+```
+
+Tests are fully offline — deterministic OHLCV fixtures, an in-memory SQLite database, and no network access. CI runs them on Python 3.11 and 3.12.
 
 ## ➕ Adding Terms & Questions
 
 - Add a term: append a `dict` to the `TERMS` list in `backend/app/data/seed_glossary.py`
 - Add a quiz question: append to the `QUESTIONS` list in `backend/app/data/seed_quiz.py`
-- Seed functions run only when tables are **empty** — delete `backend/data.db` and restart to load new entries (data loss is fine in development)
+- Seed functions are **incremental** — they add only entries not already in the database, so a full restart picks up new ones without deleting `data.db`. Note that `@st.cache_resource` runs seeding once per process, so on Streamlit Cloud use **Reboot app** (or locally, fully stop and restart) to load new entries.
 
 ## 🤔 Why This Architecture
 
@@ -108,16 +148,19 @@ Tek Streamlit uygulaması, tek süreç, tek dil. Ayrı API sunucusu yok, JavaScr
 
 - **Arayüz**: [Streamlit](https://streamlit.io) + [Plotly](https://plotly.com/python/) (mum grafikleri)
 - **Veri**: [yfinance](https://github.com/ranaroussi/yfinance) ile çekilir, SQLite'a cache'lenir (12 saatlik TTL)
-- **Veritabanı**: SQLite (`backend/data.db`, otomatik oluşur) + SQLAlchemy ORM
+- **Veritabanı**: SQLite (`backend/data.db`, otomatik oluşur) + SQLAlchemy ORM (2.x)
+
+> **Cache notu:** Streamlit Cloud'da disk kalıcı değildir (ephemeral); `data.db` her yeniden başlatmada/dağıtımda sıfırlanır ve ilk sorguda yeniden dolar. SQLite cache'inin üstündeki bir `@st.cache_data` katmanı, süreç içi tekrar sorguları hızlı tutar.
 
 ## 🛠️ Özellikler
 
 1. **Grafikler** — Gerçek geçmiş veriyle mum grafikleri (MU, NVDA, AAPL, TSLA, MSFT)
-2. **Backtest** — Seçilen tarih aralığında MA crossover veya RSI threshold stratejisini çalıştırır; kâr/zarar, kazanma oranı, en iyi/en kötü işlem metriklerini ve alış/satış noktalarını grafik üzerinde gösterir
-3. **Quiz**
-   - *Senaryo sorusu*: Gerçek bir hissenin geçmişinden rastgele bir an seçilir — "Ne yapardın?" — sonra gerçekte ne olduğu gösterilir
-   - *Bilgi testleri*: Temel kavramlar, teknik analiz ve risk yönetimi; doğru ya da yanlış cevapta da açıklama gösterilir
-4. **Terim Sözlüğü** — Sade dille yazılmış terim açıklamaları; hem kendi sayfasında aranabilir liste olarak, hem de backtest/quiz sayfalarında bağlam içinde (`st.expander` ile) gösterilir
+2. **Teknik Analiz Eğitimi** — 11 ders; her biri kavramı anlatır, sonra **gerçek grafiklerde gerçek tarihli örnekleri** otomatik tespit edip işaretler: piyasa yapısı (HH/HL), destek/direnç, mum formasyonları, hareketli ortalama kesişimleri, RSI, Bollinger/ATR, hacim, gap, Fibonacci, risk yönetimi ve **Qullamaggie swing setup'ları** (Breakout, Episodic Pivot, Parabolic)
+3. **Grafik Oynatıcı** — TradingView tarzı bar replay: gerçek grafiği geçmiş bir tarihe geri sarıp gün gün ileri oynatarak, geleceği görmeden fiyat okuma pratiği
+4. **Quiz**
+   - *Oyunlaştırılmış senaryo*: $100 bakiye ve hedeflerle başlarsın; gerçek bir hissenin geçmişinden rastgele bir an gösterilir — Al / Açığa Sat / Bekle — sonra sonuç bakiyeni günceller, giriş noktanı işaretler ve eğitici geri bildirim verir
+   - *Bilgi testleri*: Temel kavramlar, teknik analiz, risk yönetimi ve grafik okuma; doğru ya da yanlış cevapta da açıklama gösterilir
+5. **Terim Sözlüğü** — Sade dille yazılmış terim açıklamaları; hem kendi sayfasında aranabilir liste olarak, hem de uygulama genelinde bağlam içinde (`st.expander` ile) gösterilir
 
 ## 🚀 Kurulum ve Çalıştırma
 
@@ -133,13 +176,29 @@ pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-Uygulama tarayıcıda otomatik açılır (varsayılan: http://localhost:8501). İlk açılışta SQLite tablolarını oluşturur, sözlük ve quiz verilerini yükler (sadece tablolar boşsa) ve ilk bakılan hissenin verisini 12 saat boyunca cache'ler.
+Bağımlılıklar kurulduysa tek satırlık kısayol:
+
+```bash
+cd backend && pip install -r requirements.txt && streamlit run streamlit_app.py
+```
+
+Uygulama tarayıcıda otomatik açılır (varsayılan: http://localhost:8501). İlk açılışta SQLite tablolarını oluşturur, sözlük ve quiz verilerini yükler (yalnızca eksik kayıtları ekler) ve ilk bakılan hissenin verisini 12 saat boyunca cache'ler.
+
+## 🧪 Testler
+
+```bash
+pip install pytest ruff
+pytest backend/tests -q      # ağ erişimsiz test paketi (engine, strategies, grading)
+ruff check backend           # lint
+```
+
+Testler tümüyle çevrimdışıdır — deterministik OHLCV fixture'ları, bellek içi SQLite ve sıfır ağ erişimi. CI, testleri Python 3.11 ve 3.12'de çalıştırır.
 
 ## ➕ Yeni Terim / Soru Ekleme
 
 - Terim: `backend/app/data/seed_glossary.py` içindeki `TERMS` listesine yeni `dict` ekleyin
 - Quiz sorusu: `backend/app/data/seed_quiz.py` içindeki `QUESTIONS` listesine ekleyin
-- Seed fonksiyonları sadece tablo **boşsa** çalışır — yeni verilerin yüklenmesi için `backend/data.db` dosyasını silip uygulamayı yeniden başlatın (geliştirme ortamında veri kaybı sorun değildir)
+- Seed fonksiyonları **artımlıdır** — sadece veritabanında olmayan kayıtları ekler, `data.db` silmeye gerek yok. `@st.cache_resource` tohumlamayı süreç başına bir kez çalıştırdığından, yeni kayıtlar için Streamlit Cloud'da **Reboot app** (ya da yerelde tamamen kapatıp yeniden başlatma) gerekir.
 
 ## 🤔 Neden Bu Mimari
 
@@ -150,6 +209,10 @@ Uygulama tarayıcıda otomatik açılır (varsayılan: http://localhost:8501). �
 Yalnızca eğitim amaçlıdır. Yatırım tavsiyesi değildir.
 
 ---
+
+## 📄 License / Lisans
+
+MIT — see [LICENSE](LICENSE). / MIT — bkz. [LICENSE](LICENSE).
 
 ## 👤 Developer / Geliştirici
 

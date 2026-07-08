@@ -49,3 +49,10 @@ PAGES = {
 selection = st.sidebar.radio("Sayfa", list(PAGES.keys()), label_visibility="collapsed")
 
 PAGES[selection].render()
+
+# Disclaimer her sayfada görünür — eğitim aracı, yatırım tavsiyesi değil.
+st.sidebar.divider()
+st.sidebar.caption(
+    "⚠️ Bu uygulama yalnızca eğitim amaçlıdır ve yatırım tavsiyesi değildir. "
+    "Geçmiş performans gelecekteki sonuçları garanti etmez."
+)
