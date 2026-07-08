@@ -1,5 +1,11 @@
-streamlit
-plotly
-sqlalchemy
-yfinance
-pandas
+# Sürümler alt/üst sınırla pinlendi: alt sınır test edilen minimum,
+# üst sınır bir sonraki major sürümü (breaking change riski) dışlar.
+# yfinance için üst sınır özellikle önemli — Yahoo API'sine bağımlı
+# olduğu için sık ve bazen geriye dönük uyumsuz güncellenir.
+streamlit>=1.58,<2.0
+plotly>=6.8,<7.0
+# Kod SQLAlchemy 2.x API'si kullanıyor (declarative_base orm'den,
+# Session.query). 1.x'e düşürmeyin.
+sqlalchemy>=2.0,<3.0
+yfinance>=1.4,<2.0
+pandas>=3.0,<4.0
