@@ -1,8 +1,7 @@
 import streamlit as st
 
-from app.database import session_scope
-from app.data.fetcher import get_candles, DEFAULT_SYMBOLS
-from ui.common import candlestick_figure
+from app.data.fetcher import DEFAULT_SYMBOLS, DATA_UNAVAILABLE_MESSAGE
+from ui.common import candlestick_figure, load_candles
 
 
 def render():
@@ -16,17 +15,11 @@ def render():
     )
 
     with st.spinner(f"{symbol} verisi yükleniyor…"):
-        try:
-            with session_scope() as db:
-                bars = get_candles(db, symbol)
-        except ValueError as e:
-            st.error(str(e))
-            return
+        candles = load_candles(symbol)
 
-    candles = [
-        {"date": b.date, "open": b.open, "high": b.high, "low": b.low, "close": b.close, "volume": b.volume}
-        for b in bars
-    ]
+    if not candles:
+        st.warning(DATA_UNAVAILABLE_MESSAGE)
+        return
 
     st.plotly_chart(candlestick_figure(candles), use_container_width=True)
 

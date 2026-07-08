@@ -12,6 +12,7 @@ import streamlit as st
 from plotly.subplots import make_subplots
 
 from app.database import session_scope
+from app.data.fetcher import CACHE_TTL, get_candles
 from app.indicators import with_indicators
 from app.models import GlossaryTerm
 
@@ -20,6 +21,27 @@ CATEGORY_LABELS = {
     "teknik-analiz": "Teknik Analiz",
     "risk-yonetimi": "Risk Yönetimi",
 }
+
+
+@st.cache_data(ttl=int(CACHE_TTL.total_seconds()))
+def load_candles(symbol: str) -> list[dict] | None:
+    """Sembolün mumlarını düz dict listesi olarak döndürür (veya hata durumunda None).
+
+    SQLite cache'inin üstüne süreç-içi bir @st.cache_data katmanı ekler:
+    aynı sembol arka arkaya istendiğinde DB'ye bile gidilmez. ORM nesnesi
+    değil düz dict cache'lenir — böylece oturum kapansa da veri güvenli
+    kalır (detached instance sorunu olmaz). TTL, SQLite katmanıyla tutarlı.
+    """
+    try:
+        with session_scope() as db:
+            bars = get_candles(db, symbol)
+    except ValueError:
+        return None
+    return [
+        {"date": b.date, "open": b.open, "high": b.high,
+         "low": b.low, "close": b.close, "volume": b.volume}
+        for b in bars
+    ]
 
 
 def term_expander(slug: str, label_prefix: str = "Terim") -> None:
