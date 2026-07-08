@@ -20,6 +20,21 @@ def run_backtest(
     initial_capital: float = 10000,
     **strategy_params,
 ) -> dict:
+    """Verilen barlar üzerinde stratejiyi simüle edip performans metrikleri döndürür.
+
+    Args:
+        bars: 'date' ve 'close' içeren OHLCV dict listesi.
+        strategy: STRATEGIES sözlüğündeki strateji anahtarı.
+        initial_capital: Başlangıç sermayesi (bileşik getiri hesaplanır).
+        **strategy_params: Seçilen stratejiye geçirilen parametreler.
+
+    Returns:
+        total_trades, win_rate, total_return_pct, final_capital,
+        best_trade, worst_trade ve trades anahtarlarını içeren dict.
+
+    Raises:
+        ValueError: Strateji tanımsızsa ya da yeterli veri yoksa.
+    """
     if strategy not in STRATEGIES:
         raise ValueError(f"Bilinmeyen strateji: {strategy}")
 

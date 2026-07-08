@@ -134,24 +134,24 @@ def find_candle_patterns(df: pd.DataFrame) -> list[dict]:
     """
     out = []
     for i in range(1, len(df)):
-        o, h, l, c = df.loc[i, ["open", "high", "low", "close"]]
+        o, h, lo, c = df.loc[i, ["open", "high", "low", "close"]]
         po, pc = df.loc[i - 1, ["open", "close"]]
-        rng = h - l
+        rng = h - lo
         if rng <= 0:
             continue
         body = abs(c - o)
         upper = h - max(o, c)
-        lower = min(o, c) - l
+        lower = min(o, c) - lo
         date = df.loc[i, "date"]
 
         if body / rng < 0.1:
             out.append({"date": date, "pattern": "doji", "price": h})
         elif lower / rng > 0.6 and body / rng < 0.3:
-            out.append({"date": date, "pattern": "hammer", "price": l})
+            out.append({"date": date, "pattern": "hammer", "price": lo})
         elif upper / rng > 0.6 and body / rng < 0.3:
             out.append({"date": date, "pattern": "shooting_star", "price": h})
         elif c > o and pc < po and c > po and o < pc:
-            out.append({"date": date, "pattern": "bullish_engulfing", "price": l})
+            out.append({"date": date, "pattern": "bullish_engulfing", "price": lo})
         elif c < o and pc > po and c < po and o > pc:
             out.append({"date": date, "pattern": "bearish_engulfing", "price": h})
     return out
@@ -207,7 +207,6 @@ def find_breakout_setups(df: pd.DataFrame) -> list[dict]:
     üstü hacimle kırıldığı gün. Gerçek geçmiş örnekleri bulur.
     """
     events = []
-    ma10 = sma(df["close"], 10)
     ma20 = sma(df["close"], 20)
     vol_ma = df["volume"].rolling(50).mean()
 
