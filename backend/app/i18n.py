@@ -109,6 +109,65 @@ _STRINGS: dict[str, dict[str, str]] = {
               "then play and compare with reality. Repeating this across different stocks "
               "and periods sharpens your chart-reading instinct.",
     },
+    # --- Glossary ---
+    "glossary_title": {"tr": "Terim Sözlüğü", "en": "Glossary"},
+    "glossary_intro": {
+        "tr": "Trading'de sık karşılaşacağın terimleri burada sade, gündelik bir dille açıklıyoruz.",
+        "en": "Plain-language explanations of terms you'll frequently meet in trading.",
+    },
+    "glossary_search": {"tr": "Terim Ara", "en": "Search terms"},
+    "glossary_search_ph": {
+        "tr": "örn: stop-loss, RSI, hacim...",
+        "en": "e.g. stop-loss, RSI, volume...",
+    },
+    "glossary_no_match": {
+        "tr": "Aramanızla eşleşen bir terim bulunamadı.",
+        "en": "No term matched your search.",
+    },
+    # --- Kategori etiketleri ---
+    "cat_temel": {"tr": "Temel Kavram", "en": "Fundamentals"},
+    "cat_teknik-analiz": {"tr": "Teknik Analiz", "en": "Technical Analysis"},
+    "cat_risk-yonetimi": {"tr": "Risk Yönetimi", "en": "Risk Management"},
+    # --- term_expander öntakısı ---
+    "term_prefix": {"tr": "Terim", "en": "Term"},
+    # --- Quiz genel ---
+    "quiz_title": {"tr": "Quiz", "en": "Quiz"},
+    "quiz_intro": {
+        "tr": "Bilgini test et ya da gerçek bir piyasa senaryosunda ne yapacağına karar ver.",
+        "en": "Test your knowledge, or decide what you'd do in a real market scenario.",
+    },
+    "quiz_tab_scenario": {"tr": "Senaryo Sorusu", "en": "Scenario Question"},
+    "topic_temel-kavramlar": {"tr": "Temel Kavramlar", "en": "Fundamentals"},
+    "topic_teknik-analiz": {"tr": "Teknik Analiz", "en": "Technical Analysis"},
+    "topic_risk-yonetimi": {"tr": "Risk Yönetimi", "en": "Risk Management"},
+    "topic_grafik-okuma": {"tr": "Grafik Okuma", "en": "Chart Reading"},
+    "quiz_options": {"tr": "Seçenekler", "en": "Options"},
+    "quiz_answer_btn": {"tr": "Cevapla", "en": "Answer"},
+    "quiz_correct": {"tr": "Doğru!", "en": "Correct!"},
+    "quiz_wrong": {"tr": "Yanlış. Doğru cevap: {answer}", "en": "Wrong. Correct answer: {answer}"},
+    "quiz_next": {"tr": "Sonraki Soru", "en": "Next Question"},
+    "quiz_finish": {"tr": "Bitir", "en": "Finish"},
+    "quiz_question_n": {"tr": "Soru {i} / {total}", "en": "Question {i} / {total}"},
+    "quiz_done": {"tr": "Tamamlandı", "en": "Completed"},
+    "quiz_score": {
+        "tr": "{total} sorudan {correct} tanesini doğru bildin.",
+        "en": "You got {correct} out of {total} correct.",
+    },
+    "quiz_restart": {"tr": "Tekrar Başla", "en": "Restart"},
+    "quiz_no_questions": {"tr": "Bu konuda henüz soru yok.", "en": "No questions in this topic yet."},
+    # --- Eğitim (education) sayfa çerçevesi ---
+    "edu_title": {"tr": "Teknik Analiz Eğitimi", "en": "Technical Analysis Education"},
+    "edu_intro": {
+        "tr": "Her ders, kavramı önce sade bir dille anlatır; sonra **gerçek bir hisse "
+              "grafiğinde, gerçek tarihiyle** örneğini gösterir. Grafiklerdeki tüm işaretler "
+              "geçmiş veriden otomatik tespit edilmiştir — kurgu örnek yoktur. "
+              "Öğrendiklerini Quiz sayfasındaki **Grafik Okuma** testiyle sınayabilirsin.",
+        "en": "Each lesson first explains a concept in plain language, then shows an example "
+              "**on a real stock chart with its real date**. Every marker on the charts is "
+              "detected automatically from historical data — no fabricated examples. Test what "
+              "you learn with the **Chart Reading** quiz.",
+    },
+    "edu_select_lesson": {"tr": "Ders seç", "en": "Select a lesson"},
 }
 
 

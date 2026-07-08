@@ -11,7 +11,7 @@ ekstra bir API katmanına gerek kalmadı. Tek komutla tek uygulama çalışır.
 """
 import streamlit as st
 
-from app.database import Base, engine, session_scope
+from app.database import Base, engine, ensure_content_schema, session_scope
 from app.data.seed_glossary import seed_glossary
 from app.data.seed_quiz import seed_quiz
 from app.i18n import language_selector, t
@@ -27,6 +27,7 @@ st.set_page_config(
 @st.cache_resource
 def init_database():
     """Tablo oluşturma ve başlangıç verisi yükleme — uygulama ömründe bir kez çalışır."""
+    ensure_content_schema()  # eski şemayı (i18n sütunları eksik) tazele
     Base.metadata.create_all(bind=engine)
     with session_scope() as db:
         seed_glossary(db)

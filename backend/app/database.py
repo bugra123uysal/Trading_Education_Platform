@@ -8,7 +8,7 @@ kalan kod (ORM modelleri, sorgular) aynı kalır.
 """
 from contextlib import contextmanager
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 DATABASE_URL = "sqlite:///./data.db"
@@ -30,3 +30,25 @@ def session_scope():
         yield db
     finally:
         db.close()
+
+
+def ensure_content_schema() -> None:
+    """İki dilli (i18n) sütunlar eski bir veritabanında yoksa içerik tablolarını tazeler.
+
+    create_all mevcut tabloya sütun EKLEMEZ; bu yüzden eski şemalı bir
+    data.db'de yeni `*_en` sütunları bulunmaz ve sorgular patlar. İçerik
+    tabloları tohumdan yeniden üretilebilir olduğundan (glossary/quiz),
+    şema eskiyse bunları düşürüp create_all + seed'in yeniden kurmasına
+    izin veriyoruz. Sadece yerel geliştirme verisini etkiler; Streamlit
+    Cloud'da disk zaten ephemeral. Quiz denemeleri (yerel ilerleme) sıfırlanır.
+    """
+    inspector = inspect(engine)
+    if "glossary_terms" not in inspector.get_table_names():
+        return  # tablo yok → create_all zaten güncel şemayı kuracak
+    columns = {c["name"] for c in inspector.get_columns("glossary_terms")}
+    if "term_en" in columns:
+        return  # şema güncel
+    stale = ["quiz_attempts", "quiz_questions", "glossary_terms", "user_progress"]
+    with engine.begin() as conn:
+        for table in stale:
+            conn.execute(text(f"DROP TABLE IF EXISTS {table}"))

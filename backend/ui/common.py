@@ -13,14 +13,23 @@ from plotly.subplots import make_subplots
 
 from app.database import session_scope
 from app.data.fetcher import CACHE_TTL, get_candles
+from app.i18n import get_lang, t
 from app.indicators import with_indicators
 from app.models import GlossaryTerm
 
-CATEGORY_LABELS = {
-    "temel": "Temel Kavram",
-    "teknik-analiz": "Teknik Analiz",
-    "risk-yonetimi": "Risk Yönetimi",
-}
+
+def category_label(category: str) -> str:
+    """Kategori kodunu seçili dildeki etikete çevirir."""
+    return t(f"cat_{category}")
+
+
+def loc(obj, field: str) -> str:
+    """ORM nesnesinin alanını seçili dile göre döndürür (EN yoksa TR'ye düşer)."""
+    if get_lang() == "en":
+        value = getattr(obj, f"{field}_en", None)
+        if value:
+            return value
+    return getattr(obj, field)
 
 
 @st.cache_data(ttl=int(CACHE_TTL.total_seconds()))
@@ -44,17 +53,19 @@ def load_candles(symbol: str) -> list[dict] | None:
     ]
 
 
-def term_expander(slug: str, label_prefix: str = "Terim") -> None:
-    """Verilen slug'a ait terimi st.expander içinde gösterir."""
+def term_expander(slug: str, label_prefix: str | None = None) -> None:
+    """Verilen slug'a ait terimi st.expander içinde gösterir (seçili dilde)."""
     with session_scope() as db:
         term = db.query(GlossaryTerm).filter(GlossaryTerm.slug == slug).first()
     if term is None:
         return
-    with st.expander(f"{label_prefix}: {term.term}"):
-        st.caption(CATEGORY_LABELS.get(term.category, term.category))
-        st.write(term.child_explanation)
-        if term.example:
-            st.info(term.example)
+    prefix = label_prefix or t("term_prefix")
+    with st.expander(f"{prefix}: {loc(term, 'term')}"):
+        st.caption(category_label(term.category))
+        st.write(loc(term, "child_explanation"))
+        example = loc(term, "example")
+        if example:
+            st.info(example)
 
 
 def candlestick_figure(candles: list[dict], markers: list[dict] | None = None) -> go.Figure:

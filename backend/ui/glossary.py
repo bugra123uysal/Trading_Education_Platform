@@ -1,41 +1,43 @@
 import streamlit as st
 
 from app.database import session_scope
+from app.i18n import t
 from app.models import GlossaryTerm
-from ui.common import CATEGORY_LABELS
+from ui.common import category_label, loc
 
 
 def render():
-    st.title("Terim Sözlüğü")
-    st.write("Trading'de sık karşılaşacağın terimleri burada çocuğa anlatır gibi, sade bir dille açıklıyoruz.")
+    st.title(t("glossary_title"))
+    st.write(t("glossary_intro"))
 
-    search = st.text_input("Terim Ara", placeholder="örn: stop-loss, RSI, hacim...")
+    search = st.text_input(t("glossary_search"), placeholder=t("glossary_search_ph"))
 
     with session_scope() as db:
-        terms = db.query(GlossaryTerm).order_by(GlossaryTerm.term.asc()).all()
+        rows = db.query(GlossaryTerm).all()
         terms = [
             {
-                "slug": t.slug,
-                "term": t.term,
-                "category": t.category,
-                "short_definition": t.short_definition,
-                "child_explanation": t.child_explanation,
-                "example": t.example,
+                "term": loc(r, "term"),
+                "category": r.category,
+                "short_definition": loc(r, "short_definition"),
+                "child_explanation": loc(r, "child_explanation"),
+                "example": loc(r, "example"),
             }
-            for t in terms
+            for r in rows
         ]
+
+    terms.sort(key=lambda x: x["term"].lower())
 
     if search.strip():
         s = search.strip().lower()
-        terms = [t for t in terms if s in t["term"].lower() or s in t["short_definition"].lower()]
+        terms = [t_ for t_ in terms if s in t_["term"].lower() or s in t_["short_definition"].lower()]
 
     if not terms:
-        st.info("Aramanızla eşleşen bir terim bulunamadı.")
+        st.info(t("glossary_no_match"))
         return
 
-    for t in terms:
-        with st.expander(f"{t['term']}  —  {t['short_definition']}"):
-            st.caption(CATEGORY_LABELS.get(t["category"], t["category"]))
-            st.write(t["child_explanation"])
-            if t["example"]:
-                st.info(t["example"])
+    for item in terms:
+        with st.expander(f"{item['term']}  —  {item['short_definition']}"):
+            st.caption(category_label(item["category"]))
+            st.write(item["child_explanation"])
+            if item["example"]:
+                st.info(item["example"])

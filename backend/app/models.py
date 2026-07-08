@@ -61,11 +61,17 @@ class GlossaryTerm(Base):
 
     id = Column(Integer, primary_key=True)
     slug = Column(String(60), unique=True, nullable=False, index=True)
-    term = Column(String(100), nullable=False)
     category = Column(String(50), nullable=False)  # örn: "temel", "teknik-analiz", "risk-yonetimi"
+    # Türkçe alanlar
+    term = Column(String(100), nullable=False)
     short_definition = Column(String(200), nullable=False)
     child_explanation = Column(Text, nullable=False)
     example = Column(Text, nullable=True)
+    # İngilizce alanlar (i18n) — dil "en" iken bunlar gösterilir.
+    term_en = Column(String(100), nullable=True)
+    short_definition_en = Column(String(200), nullable=True)
+    child_explanation_en = Column(Text, nullable=True)
+    example_en = Column(Text, nullable=True)
 
 
 class QuizQuestion(Base):
@@ -77,11 +83,16 @@ class QuizQuestion(Base):
 
     id = Column(Integer, primary_key=True)
     topic = Column(String(50), nullable=False)  # "temel-kavramlar" | "teknik-analiz" | "risk-yonetimi"
+    correct_index = Column(Integer, nullable=False)
+    related_glossary_slug = Column(String(60), nullable=True)
+    # Türkçe alanlar
     question_text = Column(Text, nullable=False)
     options_json = Column(Text, nullable=False)  # '["A", "B", "C", "D"]'
-    correct_index = Column(Integer, nullable=False)
     explanation = Column(Text, nullable=False)  # cevap doğru/yanlış fark etmeksizin gösterilecek açıklama
-    related_glossary_slug = Column(String(60), nullable=True)
+    # İngilizce alanlar (i18n) — şık sırası TR ile aynı olmalı (correct_index paylaşılır).
+    question_text_en = Column(Text, nullable=True)
+    options_json_en = Column(Text, nullable=True)
+    explanation_en = Column(Text, nullable=True)
 
 
 class QuizAttempt(Base):
