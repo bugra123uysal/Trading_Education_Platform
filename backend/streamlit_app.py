@@ -14,10 +14,11 @@ import streamlit as st
 from app.database import Base, engine, session_scope
 from app.data.seed_glossary import seed_glossary
 from app.data.seed_quiz import seed_quiz
+from app.i18n import language_selector, t
 from ui import dashboard, quiz, glossary, replay, education
 
 st.set_page_config(
-    page_title="Trading Eğitim Platformu",
+    page_title="Trading Education Platform",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -35,24 +36,27 @@ def init_database():
 
 init_database()
 
-st.sidebar.title("Trading Eğitim Platformu")
-st.sidebar.caption("Gerçek verilerle öğren, gerçek parayla riske girme.")
+# Dil seçici en üstte — seçim st.session_state["lang"]'e yazılır ve tüm
+# t() çağrıları bu turdan itibaren seçili dili kullanır.
+language_selector()
 
-PAGES = {
-    "Grafikler": dashboard,
-    "Teknik Analiz Eğitimi": education,
-    "Grafik Oynatıcı": replay,
-    "Quiz": quiz,
-    "Terim Sözlüğü": glossary,
-}
+st.sidebar.title(t("app_title"))
+st.sidebar.caption(t("app_tagline"))
 
-selection = st.sidebar.radio("Sayfa", list(PAGES.keys()), label_visibility="collapsed")
+# (nav anahtarı, sayfa modülü) — etiketler seçili dile göre üretilir.
+PAGES = [
+    ("nav_charts", dashboard),
+    ("nav_education", education),
+    ("nav_replay", replay),
+    ("nav_quiz", quiz),
+    ("nav_glossary", glossary),
+]
+labels = [t(key) for key, _ in PAGES]
 
-PAGES[selection].render()
+selection = st.sidebar.radio("nav", labels, label_visibility="collapsed")
+module = PAGES[labels.index(selection)][1]
+module.render()
 
 # Disclaimer her sayfada görünür — eğitim aracı, yatırım tavsiyesi değil.
 st.sidebar.divider()
-st.sidebar.caption(
-    "⚠️ Bu uygulama yalnızca eğitim amaçlıdır ve yatırım tavsiyesi değildir. "
-    "Geçmiş performans gelecekteki sonuçları garanti etmez."
-)
+st.sidebar.caption(t("disclaimer"))

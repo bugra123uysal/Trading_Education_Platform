@@ -17,46 +17,32 @@ import time
 
 import streamlit as st
 
-from app.database import session_scope
-from app.data.fetcher import get_candles, DEFAULT_SYMBOLS
-from ui.common import indicator_figure
+from app.data.fetcher import DEFAULT_SYMBOLS
+from app.i18n import t
+from ui.common import indicator_figure, load_candles
 
-
-SPEED_OPTIONS = {
-    "Yavaş (0.5 sn/gün)": 0.5,
-    "Normal (0.25 sn/gün)": 0.25,
-    "Hızlı (0.1 sn/gün)": 0.1,
-}
+# Etiket -> saniye. Etiketler t() ile üretilir (dile göre değişir).
+SPEED_SECONDS = {"slow": 0.5, "normal": 0.25, "fast": 0.1}
 
 
 def render():
-    st.title("Grafik Oynatıcı (Replay)")
-    st.write(
-        "Grafiği geçmişte bir tarihe geri sar, sonra gün gün oynat — geleceği "
-        "bilmeden fiyatın nasıl aktığını izle. TradingView'daki Bar Replay'in "
-        "eğitim amaçlı basit halidir."
-    )
+    st.title(t("replay_title"))
+    st.write(t("replay_intro"))
 
     symbol = st.selectbox(
-        "Hisse Sembolü",
+        t("symbol_label"),
         options=list(DEFAULT_SYMBOLS.keys()),
         format_func=lambda s: f"{s} — {DEFAULT_SYMBOLS[s]}",
         key="rp_symbol",
     )
 
-    # Veriyi yükle
-    with st.spinner(f"{symbol} verisi yükleniyor…"):
-        try:
-            with session_scope() as db:
-                bars = get_candles(db, symbol)
-        except ValueError as e:
-            st.error(str(e))
-            return
+    with st.spinner(t("loading", symbol=symbol)):
+        full_bars = load_candles(symbol)
 
-    full_bars = [
-        {"date": b.date, "open": b.open, "high": b.high, "low": b.low, "close": b.close, "volume": b.volume}
-        for b in bars
-    ]
+    if not full_bars:
+        st.warning(t("data_unavailable"))
+        return
+
     dates = [b["date"] for b in full_bars]
 
     # Sembol değişince replay durumunu sıfırla
@@ -68,21 +54,32 @@ def render():
     # En az 60 bar geçmiş kalsın ki grafik anlamlı görünsün
     min_idx = min(60, len(dates) - 2)
     start_date = st.select_slider(
-        "Grafiği bu tarihe geri sar:",
+        t("replay_rewind_to"),
         options=dates[min_idx:-1],
         value=dates[len(dates) // 2],
         key="rp_start_date",
     )
     start_idx = dates.index(start_date)
 
+    speed_labels = {
+        "slow": t("replay_speed_slow"),
+        "normal": t("replay_speed_normal"),
+        "fast": t("replay_speed_fast"),
+    }
     c1, c2 = st.columns([1, 2])
-    if c1.button("⏮ Bu Tarihe Geri Sar", use_container_width=True):
+    if c1.button(t("replay_rewind_btn"), use_container_width=True):
         st.session_state.rp_index = start_idx
-    speed_label = c2.selectbox("Oynatma Hızı", options=list(SPEED_OPTIONS.keys()), index=1, key="rp_speed")
-    speed = SPEED_OPTIONS[speed_label]
+    speed_code = c2.selectbox(
+        t("replay_speed"),
+        options=list(SPEED_SECONDS.keys()),
+        index=1,
+        format_func=lambda c: speed_labels[c],
+        key="rp_speed",
+    )
+    speed = SPEED_SECONDS[speed_code]
 
     if st.session_state.get("rp_index") is None:
-        st.info("Yukarıdan bir tarih seçip 'Geri Sar' butonuna bas — grafik o güne dönecek.")
+        st.info(t("replay_hint_start"))
         return
 
     idx = st.session_state.rp_index
@@ -92,11 +89,11 @@ def render():
 
     # --- Kontroller ---
     k1, k2, k3, k4, k5 = st.columns(5)
-    step1 = k1.button("+1 gün", use_container_width=True)
-    step5 = k2.button("+5 gün", use_container_width=True)
-    play20 = k3.button("▶ 20 gün oynat", use_container_width=True)
-    play_all = k4.button("▶▶ Sona kadar", use_container_width=True)
-    reset = k5.button("⏮ Başa dön", use_container_width=True)
+    step1 = k1.button(t("replay_step1"), use_container_width=True)
+    step5 = k2.button(t("replay_step5"), use_container_width=True)
+    play20 = k3.button(t("replay_play20"), use_container_width=True)
+    play_all = k4.button(t("replay_play_all"), use_container_width=True)
+    reset = k5.button(t("replay_reset"), use_container_width=True)
 
     if reset:
         st.session_state.rp_index = start_idx
@@ -113,9 +110,9 @@ def render():
     current_price = full_bars[idx]["close"]
     change_pct = round((current_price - replay_start_price) / replay_start_price * 100, 2)
     m1, m2, m3 = st.columns(3)
-    m1.metric("Şu Anki Tarih", current_date)
-    m2.metric("Kapanış", f"${current_price}", f"{change_pct}% (geri sarma noktasından beri)")
-    m3.metric("Kalan Gün", remaining)
+    m1.metric(t("replay_current_date"), current_date)
+    m2.metric(t("replay_close"), f"${current_price}", t("replay_change_since", pct=change_pct))
+    m3.metric(t("replay_days_left"), remaining)
 
     chart_slot = st.empty()
 
@@ -125,7 +122,7 @@ def render():
                 full_bars[: upto_idx + 1],
                 display_start=dates[max(0, upto_idx - 120)],  # son ~120 gün görünür, TradingView hissi
                 vline_date=start_date,
-                vline_label="Geri sarma noktası",
+                vline_label=t("replay_rewind_point"),
             ),
             use_container_width=True,
             key=f"rp_chart_{upto_idx}_{time.time_ns()}",
@@ -135,22 +132,15 @@ def render():
     if play20 or play_all:
         frames = remaining if play_all else min(20, remaining)
         if frames == 0:
-            st.warning("Grafik zaten en güncel tarihte — oynatılacak gün kalmadı.")
+            st.warning(t("replay_no_days"))
             draw(idx)
         else:
             for i in range(1, frames + 1):
                 draw(idx + i)
                 time.sleep(speed)
             st.session_state.rp_index = idx + frames
-            st.success(
-                f"{frames} gün oynatıldı. Şu an {dates[idx + frames]} tarihindesin. "
-                "Devam etmek için tekrar oynat ya da adım butonlarını kullan."
-            )
+            st.success(t("replay_played", n=frames, date=dates[idx + frames]))
     else:
         draw(idx)
 
-    st.caption(
-        "İpucu: Bir tarihte dur, kendine 'buradan sonra ne olur?' diye sor, tahminini "
-        "yap, sonra oynat ve gerçekle karşılaştır. Bu alıştırmayı farklı hisse ve "
-        "dönemlerde tekrarlamak, grafik okuma refleksini geliştirir."
-    )
+    st.caption(t("replay_tip"))
