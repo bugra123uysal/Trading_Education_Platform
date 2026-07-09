@@ -168,6 +168,203 @@ _STRINGS: dict[str, dict[str, str]] = {
               "you learn with the **Chart Reading** quiz.",
     },
     "edu_select_lesson": {"tr": "Ders seç", "en": "Select a lesson"},
+    # --- Senaryo (oyunlaştırılmış) ---
+    "scen_balance": {"tr": "Bakiyen", "en": "Your Balance"},
+    "scen_balance_delta": {"tr": "{delta:+,.2f}$ toplam", "en": "{delta:+,.2f}$ total"},
+    "scen_next_target": {"tr": "Sıradaki Hedef", "en": "Next Target"},
+    "scen_all_targets": {"tr": "Tüm hedefler tamam! 🏆", "en": "All targets reached! 🏆"},
+    "scen_trades": {"tr": "İşlem Sayısı", "en": "Trades"},
+    "scen_progress": {"tr": "${target} hedefine ilerleme", "en": "Progress to ${target}"},
+    "scen_low_balance": {
+        "tr": "Bakiyen çok azaldı! Gerçek hayatta bu noktaya gelmeden risk yönetimi devreye girmeliydi.",
+        "en": "Your balance is very low! In real life risk management should have kicked in before this point.",
+    },
+    "scen_reset_btn": {
+        "tr": "Oyunu Sıfırla ($100 ile yeniden başla)",
+        "en": "Reset Game (start over with $100)",
+    },
+    "scen_date_header": {"tr": "{symbol} — {date} tarihindesin", "en": "{symbol} — you're on {date}"},
+    "scen_intro": {
+        "tr": "Aşağıdaki grafik, {symbol} hissesinin {date} tarihine kadar olan gerçek fiyat "
+              "hareketini gösteriyor. Bakiyenin tamamıyla (${balance:,.2f}) işlem yapıyorsun: "
+              "**Al** dersen yükselişten kazanırsın, **Sat (açığa satış)** dersen düşüşten "
+              "kazanırsın, **Bekle** dersen bakiyen değişmez.",
+        "en": "The chart below shows {symbol}'s real price action up to {date}. You trade with "
+              "your full balance (${balance:,.2f}): choose **Buy** to profit from a rise, "
+              "**Sell (short)** to profit from a fall, or **Wait** to leave your balance unchanged.",
+    },
+    "scen_buy_btn": {"tr": "AL (yükseliş beklerim)", "en": "BUY (I expect a rise)"},
+    "scen_short_btn": {"tr": "SAT — açığa satış (düşüş beklerim)", "en": "SELL — short (I expect a fall)"},
+    "scen_wait_btn": {"tr": "BEKLE (işleme girmem)", "en": "WAIT (I stay out)"},
+    "scen_trade_moment": {"tr": "İşlem anı", "en": "Trade moment"},
+    "scen_caption_traded": {
+        "tr": "Sarı kesikli çizgi, {date} tarihinde işleme girdiğin anı gösteriyor — çizginin "
+              "solu karar verirken gördüğün grafik, sağı işlemden sonra gerçekte yaşananlar. {point}",
+        "en": "The yellow dashed line marks the moment you entered on {date} — left of the line "
+              "is the chart you saw when deciding, right of it is what actually happened. {point}",
+    },
+    "scen_caption_wait": {
+        "tr": "Sarı kesikli çizgi, {date} tarihindeki karar anını gösteriyor — çizginin solu "
+              "karar verirken gördüğün grafik, sağı sonrasında gerçekte yaşananlar.",
+        "en": "The yellow dashed line marks the decision moment on {date} — left of the line is "
+              "the chart you saw, right of it is what actually happened next.",
+    },
+    "scen_buy_point": {"tr": "Yeşil yukarı ok = ALIŞ noktası.", "en": "Green up-arrow = BUY point."},
+    "scen_short_point": {"tr": "Kırmızı aşağı ok = AÇIĞA SATIŞ noktası.", "en": "Red down-arrow = SHORT point."},
+    "scen_went_up": {"tr": "yükseldi", "en": "rose"},
+    "scen_went_down": {"tr": "düştü", "en": "fell"},
+    "scen_outcome": {
+        "tr": "Sonraki 20 gün içinde fiyat %{pct} {went}.",
+        "en": "Over the next 20 days the price {went} {pct}%.",
+    },
+    "scen_wait_result": {
+        "tr": "{msg} Sen beklemeyi seçtin — bakiyen değişmedi.",
+        "en": "{msg} You chose to wait — your balance didn't change.",
+    },
+    "scen_win_result": {
+        "tr": "{msg} Doğru yöndeydin: **+${pnl:,.2f}** kazandın. Yeni bakiyen: ${balance:,.2f}",
+        "en": "{msg} You were on the right side: you gained **+${pnl:,.2f}**. New balance: ${balance:,.2f}",
+    },
+    "scen_loss_result": {
+        "tr": "{msg} Ters yöndeydin: **-${pnl:,.2f}** kaybettin. Yeni bakiyen: ${balance:,.2f}",
+        "en": "{msg} You were on the wrong side: you lost **-${pnl:,.2f}**. New balance: ${balance:,.2f}",
+    },
+    "scen_target_reached": {
+        "tr": "🎯 ${target} hedefine ulaştın! Sıradaki hedef: ${next}",
+        "en": "🎯 You reached the ${target} target! Next target: ${next}",
+    },
+    "scen_new_btn": {"tr": "Yeni Senaryo", "en": "New Scenario"},
+    "scen_risk_prefix": {"tr": "Riskini nasıl sınırlarsın", "en": "How to limit your risk"},
+    # Eğitici geri bildirim
+    "scen_edu_header": {"tr": "### 📖 Bu işlemden ne öğrenebilirsin?", "en": "### 📖 What can you learn from this trade?"},
+    "scen_tip_buy_trend_up": {
+        "tr": "AL kararı verirken fiyatın 200 günlük EMA'nın üzerinde olması lehineydi — "
+              "trend yönünde işlem yapmak ('trend dostundur' kuralı) genelde daha güvenlidir.",
+        "en": "Price being above the 200-day EMA was in your favor for the BUY — trading with "
+              "the trend ('the trend is your friend') is usually safer.",
+    },
+    "scen_tip_buy_trend_down": {
+        "tr": "Fiyat 200 günlük EMA'nın altındayken AL demek 'düşen bıçağı tutmak' olarak "
+              "adlandırılır — trende karşı işlem risklidir. Genelde fiyatın önce uzun vadeli "
+              "ortalamanın üzerine çıkmasını beklemek daha güvenlidir.",
+        "en": "Buying while price is below the 200-day EMA is called 'catching a falling knife' "
+              "— trading against the trend is risky. It's usually safer to wait for price to "
+              "reclaim the long-term average first.",
+    },
+    "scen_tip_short_trend_up": {
+        "tr": "Yükseliş trendinde açığa satış yapmak en riskli işlemlerden biridir — güçlü "
+              "trendler beklenenden çok daha uzun sürebilir. Açığa satışta zarar teorik olarak "
+              "sınırsızdır, unutma.",
+        "en": "Shorting in an uptrend is one of the riskiest trades — strong trends can last far "
+              "longer than expected. Remember, in short selling the loss is theoretically unlimited.",
+    },
+    "scen_tip_short_trend_down": {
+        "tr": "Düşüş trendinde SAT demek trend yönünde bir karardı — açığa satışta bile trend "
+              "yönünde işlem yapmak mantıklıdır. Yine de açığa satış her zaman yüksek risklidir.",
+        "en": "Shorting in a downtrend was a with-the-trend decision — even in short selling, "
+              "trading with the trend makes sense. Still, short selling is always high-risk.",
+    },
+    "scen_tip_wait": {
+        "tr": "Beklemek de bir pozisyondur. Profesyoneller net sinyal yoksa işleme girmez — "
+              "'işlem yapmama disiplini' en az alım-satım kadar önemlidir.",
+        "en": "Waiting is a position too. Professionals stay out without a clear signal — the "
+              "'discipline of not trading' matters as much as trading itself.",
+    },
+    "scen_tip_win": {
+        "tr": "Kazandın ama dikkat: tek bir doğru tahmin, stratejinin işe yaradığını kanıtlamaz. "
+              "Gerçek başarı, 50-100 işlemin toplamında kârda kalabilmektir.",
+        "en": "You won, but note: one correct guess doesn't prove a strategy works. Real success "
+              "is staying profitable across the sum of 50–100 trades.",
+    },
+    "scen_tip_loss": {
+        "tr": "Kaybettin — ama bu kötü bir karar verdiğin anlamına gelmeyebilir. Doğru analizle "
+              "girilen işlemler de kaybedebilir. Önemli olan: her işlemde bakiyenin en fazla "
+              "%1-2'sini riske atmak. Bu oyunda tüm bakiyenle işlem yapıyorsun — gerçek hayatta bunu asla yapma!",
+        "en": "You lost — but that may not mean you decided badly. Well-analyzed trades can lose "
+              "too. What matters: risk at most 1–2% of your balance per trade. In this game you "
+              "trade your whole balance — never do that in real life!",
+    },
+    "scen_tip_reading_order": {
+        "tr": "Grafiği okurken sıralama şöyle olmalı: önce trend (fiyat EMA 200'ün neresinde?), "
+              "sonra momentum (EMA 50, EMA 200'ün üstünde mi?), sonra hacim (harekete katılım var mı?). "
+              "Aşağıdaki teknik gözlemler bu sırayla yazıldı.",
+        "en": "Read a chart in this order: first trend (where is price relative to EMA 200?), then "
+              "momentum (is EMA 50 above EMA 200?), then volume (is there participation?). The "
+              "technical observations below are written in that order.",
+    },
+    "scen_reasoning_header": {
+        "tr": "**Grafiğin bu yöne neden ilerlemiş olabileceğine dair teknik gözlemler:**",
+        "en": "**Technical observations on why the chart may have moved this way:**",
+    },
+    "scen_reasoning_note": {
+        "tr": "Not: Bunlar fiyat/hacim verisinden çıkarılan teknik gözlemlerdir, kesin bir "
+              "neden-sonuç kanıtı değildir. Karmaşık finans terimleri temiz bir anlatımla "
+              "açıklanmıştır; gerçek hayatta fiyatı haberler, kazanç açıklamaları gibi "
+              "teknik göstergede görünmeyen olaylar da etkiler.",
+        "en": "Note: these are technical observations drawn from price/volume data, not proof of "
+              "cause and effect. In real life, price is also driven by news and earnings that "
+              "don't appear on technical indicators.",
+    },
+    # --- Senaryo teknik gözlemleri (reasoning) ---
+    "reason_above_200": {
+        "tr": "Kesme noktasında fiyat, uzun vadeli eğilimi gösteren 200 günlük EMA'nın "
+              "üzerindeydi — bu genellikle büyük resimde bir yükseliş trendine işaret eder.",
+        "en": "At the cut point price was above the 200-day EMA (the long-term trend gauge) — "
+              "this usually points to an uptrend in the big picture.",
+    },
+    "reason_below_200": {
+        "tr": "Kesme noktasında fiyat, 200 günlük EMA'nın altındaydı — bu genellikle "
+              "büyük resimde bir düşüş ya da zayıf trende işaret eder.",
+        "en": "At the cut point price was below the 200-day EMA — this usually points to a "
+              "downtrend or a weak trend in the big picture.",
+    },
+    "reason_ema50_above": {
+        "tr": "Kısa vadeli ortalama (EMA 50), uzun vadeli ortalamanın (EMA 200) üzerindeydi — "
+              "momentum yukarı yönlüydü.",
+        "en": "The short-term average (EMA 50) was above the long-term average (EMA 200) — "
+              "momentum was to the upside.",
+    },
+    "reason_ema50_below": {
+        "tr": "Kısa vadeli ortalama (EMA 50), uzun vadeli ortalamanın (EMA 200) altındaydı — "
+              "momentum aşağı yönlüydü.",
+        "en": "The short-term average (EMA 50) was below the long-term average (EMA 200) — "
+              "momentum was to the downside.",
+    },
+    "reason_dv_high": {
+        "tr": "Son günlerde dolar hacmi, 50 günlük ortalamasının belirgin şekilde "
+              "üzerindeydi — hisseye yoğun bir ilgi vardı.",
+        "en": "In recent days dollar volume was clearly above its 50-day average — there was "
+              "strong interest in the stock.",
+    },
+    "reason_dv_low": {
+        "tr": "Son günlerde dolar hacmi, 50 günlük ortalamasının altındaydı — "
+              "hisseye olan ilgi nispeten sönükleşmişti.",
+        "en": "In recent days dollar volume was below its 50-day average — interest in the "
+              "stock had relatively faded.",
+    },
+    "reason_dv_normal": {
+        "tr": "Dolar hacmi son günlerde normal seviyelerdeydi, belirgin bir anormallik yoktu.",
+        "en": "Dollar volume was at normal levels recently, with no clear anomaly.",
+    },
+    "reason_after_up_highvol": {
+        "tr": "Sonrasında gerçekleşen yükseliş, ortalamanın üzerinde bir hacimle "
+              "desteklendi — teknik analizde bu genelde hareketin 'sağlıklı' / "
+              "katılımlı kabul edildiği bir işarettir.",
+        "en": "The rise that followed was backed by above-average volume — in technical "
+              "analysis this is usually seen as a 'healthy', participated move.",
+    },
+    "reason_after_down_highvol": {
+        "tr": "Sonrasında gerçekleşen düşüş, ortalamanın üzerinde bir hacimle "
+              "gerçekleşti — bu genelde satış baskısının güçlü olduğunu gösterir.",
+        "en": "The decline that followed happened on above-average volume — this usually "
+              "indicates strong selling pressure.",
+    },
+    "reason_after_lowvol": {
+        "tr": "Sonraki hareket, düşük hacimle gerçekleşti — bu tür hareketler "
+              "genelde daha az güvenilir kabul edilir, kolayca tersine dönebilir.",
+        "en": "The subsequent move happened on low volume — such moves are usually considered "
+              "less reliable and can reverse easily.",
+    },
 }
 
 

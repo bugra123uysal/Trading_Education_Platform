@@ -31,5 +31,6 @@ def grade_answer(db: Session, question_id: int, selected_index: int) -> dict:
         "is_correct": is_correct,
         "correct_index": question.correct_index,
         "explanation": question.explanation,
+        "explanation_en": question.explanation_en,
         "related_glossary_slug": question.related_glossary_slug,
     }
